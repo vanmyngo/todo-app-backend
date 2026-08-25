@@ -1,0 +1,25 @@
+# Dependencies
+node_modules/
+
+# Build output
+.aws-sam/
+dist/
+*.js.map
+
+# Environment / secrets
+.env
+.env.local
+
+# SAM local config
+samconfig.toml
+
+# Logs
+*.log
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Editor
+.vscode/
+.idea/

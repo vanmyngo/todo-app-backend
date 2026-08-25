@@ -1,0 +1,139 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: >
+  todo-app
+
+Parameters:
+  TableName:
+    Type: String
+    Default: TodosTable
+    Description: Name of the DynamoDB table
+
+Metadata:
+  esbuild-config: &esbuild-metadata
+    BuildMethod: esbuild
+    BuildProperties:
+      Minify: false
+      Target: "es2020"
+      EntryPoints:
+        - app.ts
+
+# More info about Globals: https://github.com/awslabs/serverless-application-model/blob/master/docs/globals.rst
+Globals:
+  Function:
+    Timeout: 3
+    Environment:
+      Variables:
+        TABLE: !Ref TableName
+        REGION: !Ref AWS::Region
+
+Resources:
+  TodosTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: !Ref TableName
+      BillingMode: PAY_PER_REQUEST
+      AttributeDefinitions:
+        - AttributeName: id
+          AttributeType: S
+      KeySchema:
+        - AttributeName: id
+          KeyType: HASH
+      
+  CreateTodoFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: src/create_todo/
+      Handler: app.lambda_handler
+      Runtime: nodejs24.x
+      Events:
+        CreateActivities:
+          Type: Api
+          Properties:
+            Path: /todos
+            Method: post
+      Policies:
+        - DynamoDBCrudPolicy:
+            TableName: !Ref TodosTable
+    Metadata:
+      <<: *esbuild-metadata
+
+  GetTodoFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: src/get_todos/
+      Handler: app.lambda_handler
+      Runtime: nodejs24.x
+      Events:
+        GetActivities:
+          Type: Api
+          Properties:
+            Path: /todos/{id}
+            Method: get
+      Policies:
+        - DynamoDBCrudPolicy:
+            TableName: !Ref TodosTable
+    Metadata:
+      <<: *esbuild-metadata
+
+  ListActivitiesFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: src/list_todos/
+      Handler: app.lambda_handler
+      Runtime: nodejs24.x
+      Events:
+        ListActivities:
+          Type: Api
+          Properties:
+            Path: /todos
+            Method: get
+      Policies:
+        - DynamoDBCrudPolicy:
+            TableName: !Ref TodosTable
+    Metadata:
+      <<: *esbuild-metadata
+
+  UpdateTodoFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: src/update_todo/
+      Handler: app.lambda_handler
+      Runtime: nodejs24.x
+      Events:
+        UpdateActivities:
+          Type: Api
+          Properties:
+            Path: /todos/{id}
+            Method: put
+      Policies:
+        - DynamoDBCrudPolicy:
+            TableName: !Ref TodosTable
+    Metadata:
+      <<: *esbuild-metadata
+
+  DeleteTodoFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: src/delete_todo/
+      Handler: app.lambda_handler
+      Runtime: nodejs24.x
+      Events:
+        DeleteActivities:
+          Type: Api
+          Properties:
+            Path: /todos/{id}
+            Method: delete
+      Policies:
+        - DynamoDBCrudPolicy:
+            TableName: !Ref TodosTable
+    Metadata:
+      <<: *esbuild-metadata
+      
+Outputs:
+  TodoApi:
+    Description: "API Gateway endpoint URL for the Todo API"
+    Value: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.${AWS::URLSuffix}/Prod/"
+  TodosTableName:
+    Description: "Name of the DynamoDB table"
+    Value: !Ref TodosTable
