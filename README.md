@@ -4,15 +4,15 @@ A simple CRUD to-do app built on AWS, using only always-free tier services.
  
 ## Tech Stack
  
-**Backend**
+### Backend
 - AWS Lambda (Node.js 24, TypeScript, bundled with esbuild)
 - Amazon API Gateway (REST API)
 - Amazon DynamoDB (single table, on-demand billing)
 - AWS SAM (infrastructure as code)
-**Frontend**
+### Frontend
 - React (planned)
 - Hosted on S3 + CloudFront
-**Auth**
+### Auth
 - Amazon Cognito (planned)
 ## MVP Features
  
