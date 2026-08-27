@@ -47,7 +47,7 @@ Resources:
       Handler: app.lambda_handler
       Runtime: nodejs24.x
       Events:
-        CreateActivities:
+        CreateTodo:
           Type: Api
           Properties:
             Path: /todos
@@ -65,7 +65,7 @@ Resources:
       Handler: app.lambda_handler
       Runtime: nodejs24.x
       Events:
-        GetActivities:
+        GetTodo:
           Type: Api
           Properties:
             Path: /todos/{id}
@@ -76,14 +76,14 @@ Resources:
     Metadata:
       <<: *esbuild-metadata
 
-  ListActivitiesFunction:
+  ListTodoFunction:
     Type: AWS::Serverless::Function
     Properties:
       CodeUri: src/list_todos/
       Handler: app.lambda_handler
       Runtime: nodejs24.x
       Events:
-        ListActivities:
+        ListTodo:
           Type: Api
           Properties:
             Path: /todos
@@ -101,7 +101,7 @@ Resources:
       Handler: app.lambda_handler
       Runtime: nodejs24.x
       Events:
-        UpdateActivities:
+        UpdateTodo:
           Type: Api
           Properties:
             Path: /todos/{id}
@@ -119,7 +119,7 @@ Resources:
       Handler: app.lambda_handler
       Runtime: nodejs24.x
       Events:
-        DeleteActivities:
+        DeleteTodo:
           Type: Api
           Properties:
             Path: /todos/{id}
