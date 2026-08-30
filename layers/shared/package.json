@@ -1,0 +1,12 @@
+{
+    "name": "shared",
+    "version": "1.0.0",
+    "description": "Shared layer",
+    "main": "nodejs/node_modules/shared/index.js",
+    "scripts": {
+        "build": "tsc"
+    },
+    "devDependencies": {
+        "typescript": "^5.9.3"
+    }
+}
