@@ -1,6 +1,6 @@
 import { DynamoDB } from "@aws-sdk/client-dynamodb";
 import { DynamoDBDocument } from "@aws-sdk/lib-dynamodb";
-import { DEFAULT_USER_ID } from "../shared/constant";
+import { DEFAULT_USER_ID } from "shared";
 
 const client = new DynamoDB({ region: process.env.REGION });
 const docClient = DynamoDBDocument.from(client);
@@ -23,7 +23,7 @@ export const lambda_handler = async () => {
       body: JSON.stringify(items) 
     };
   } catch (error) {
-    console.error("[list_todos/app.ts] Failed with: " + error);
+    console.error("[list_todos/app.ts] " + error);
     return {
       statusCode: 500,
       body: JSON.stringify({ message: "Failed to fetch todos."})
