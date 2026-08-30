@@ -10,7 +10,10 @@
       "esModuleInterop": true, 
       "skipLibCheck": true,
       "forceConsistentCasingInFileNames": true, 
-      "types": ["node"], 
+      "types": ["node", "jest"], 
+      "paths": {
+        "shared": ["./layers/shared/src/index.ts"]
+      }
     },
     "exclude": ["node_modules", "**/*.test.ts"]
   }
