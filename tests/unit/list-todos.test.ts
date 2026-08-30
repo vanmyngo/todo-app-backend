@@ -26,7 +26,7 @@ describe("list_todos", () => {
             description: "Returns 200 - no todos",
             mockTodos: []
         }
-    ])("$description", async ({ mockTodos }) => {
+    ])("$description", async ({ mockTodos }: { mockTodos: Record<string, unknown>[] }) => {        
         // Query mock todo
         mockQuery.mockResolvedValueOnce({ Items: mockTodos });
 
