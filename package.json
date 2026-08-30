@@ -6,7 +6,9 @@
   "repository": "https://github.com/vanmyngo/todo-app-backend",
   "author": "Van Ngo",
   "license": "MIT",
-  "workspaces": ["src/*"],
+  "workspaces": [
+    "src/*"
+  ],
   "scripts": {
     "unit": "jest",
     "lint": "eslint '*.ts' --quiet --fix",
@@ -19,7 +21,7 @@
   "devDependencies": {
     "@jest/globals": "^29.2.0",
     "@types/aws-lambda": "^8.10.92",
-    "@types/jest": "^29.2.0",
+    "@types/jest": "^29.5.14",
     "@types/node": "^20.19.43",
     "@typescript-eslint/eslint-plugin": "^5.10.2",
     "@typescript-eslint/parser": "^5.10.2",
