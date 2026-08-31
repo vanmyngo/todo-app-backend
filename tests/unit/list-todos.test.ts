@@ -1,7 +1,3 @@
-// Mock vars for lambda handler
-process.env.TABLE = "TestTable";
-process.env.REGION = "us-east-1";
-
 // Fake query function to control
 const mockQuery = jest.fn();
 
@@ -20,7 +16,7 @@ describe("list_todos", () => {
     it.each([ 
         {
             description: "Returns 200 - successful query with todos",
-            mockTodos: [{ userId: "default-user", "taskId": "1", task: "Buy bread", completed: false }]
+            mockTodos: [{ userId: DEFAULT_USER_ID, "taskId": "1", task: "Buy bread", completed: false }]
         },
         {
             description: "Returns 200 - no todos",
