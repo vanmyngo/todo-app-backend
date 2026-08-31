@@ -10,8 +10,8 @@ async function deleteTodo(userId: string, taskId: string) {
   const params = {
     TableName: process.env.TABLE,
     Key: {
-      userId: userId,
-      taskId: taskId,
+      userId,
+      taskId,
     },
   };
 
