@@ -15,4 +15,5 @@ export default {
     moduleNameMapper: {
         '^shared$': '<rootDir>/layers/shared/src/index.ts',
     },
+    setupFiles: ["<rootDir>/tests/jest.setup.ts"],
 };
