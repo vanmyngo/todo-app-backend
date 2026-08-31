@@ -6,7 +6,7 @@ import { DEFAULT_USER_ID } from "shared";
 const client = new DynamoDB({ region: process.env.REGION });
 const docClient = DynamoDBDocument.from(client);
 
-async function putTodo(task: string) {
+async function createTodo(task: string) {
   const params = {
     TableName: process.env.TABLE,
     Item: {
@@ -32,7 +32,7 @@ export const lambda_handler = async (event: any) => {
   }
 
   try {
-    const newTodo = await putTodo(body.task);
+    const newTodo = await createTodo(body.task);
     return {
       statusCode: 201,
       body: JSON.stringify(newTodo)
