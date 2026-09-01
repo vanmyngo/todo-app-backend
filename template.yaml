@@ -17,6 +17,8 @@ Metadata:
       Target: "es2020"
       EntryPoints:
         - app.ts
+      External:
+        - shared
 
 # More info about Globals: https://github.com/awslabs/serverless-application-model/blob/master/docs/globals.rst
 Globals:
@@ -34,11 +36,15 @@ Resources:
       TableName: !Ref TableName
       BillingMode: PAY_PER_REQUEST
       AttributeDefinitions:
-        - AttributeName: id
+        - AttributeName: userId
+          AttributeType: S
+        - AttributeName: taskId
           AttributeType: S
       KeySchema:
-        - AttributeName: id
+        - AttributeName: userId
           KeyType: HASH
+        - AttributeName: taskId
+          KeyType: RANGE
       
   CreateTodoFunction:
     Type: AWS::Serverless::Function
@@ -55,24 +61,28 @@ Resources:
       Policies:
         - DynamoDBCrudPolicy:
             TableName: !Ref TodosTable
+      Layers: 
+        - !Ref SharedUtilsLayer
     Metadata:
       <<: *esbuild-metadata
 
   GetTodoFunction:
     Type: AWS::Serverless::Function
     Properties:
-      CodeUri: src/get_todos/
+      CodeUri: src/get_todo/
       Handler: app.lambda_handler
       Runtime: nodejs24.x
       Events:
         GetTodo:
           Type: Api
           Properties:
-            Path: /todos/{id}
+            Path: /todos/{taskId}
             Method: get
       Policies:
         - DynamoDBCrudPolicy:
             TableName: !Ref TodosTable
+      Layers: 
+        - !Ref SharedUtilsLayer
     Metadata:
       <<: *esbuild-metadata
 
@@ -91,6 +101,8 @@ Resources:
       Policies:
         - DynamoDBCrudPolicy:
             TableName: !Ref TodosTable
+      Layers: 
+        - !Ref SharedUtilsLayer
     Metadata:
       <<: *esbuild-metadata
 
@@ -104,11 +116,13 @@ Resources:
         UpdateTodo:
           Type: Api
           Properties:
-            Path: /todos/{id}
+            Path: /todos/{taskId}
             Method: put
       Policies:
         - DynamoDBCrudPolicy:
             TableName: !Ref TodosTable
+      Layers: 
+        - !Ref SharedUtilsLayer
     Metadata:
       <<: *esbuild-metadata
 
@@ -122,13 +136,22 @@ Resources:
         DeleteTodo:
           Type: Api
           Properties:
-            Path: /todos/{id}
+            Path: /todos/{taskId}
             Method: delete
       Policies:
         - DynamoDBCrudPolicy:
             TableName: !Ref TodosTable
+      Layers: 
+        - !Ref SharedUtilsLayer
     Metadata:
       <<: *esbuild-metadata
+
+  SharedUtilsLayer:
+    Type: AWS::Serverless::LayerVersion
+    Properties:
+      ContentUri: layers/shared
+      CompatibleRuntimes: 
+        - nodejs24.x
       
 Outputs:
   TodoApi:

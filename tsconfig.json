@@ -1,15 +1,20 @@
 {
-    "compilerOptions": {
-      "target": "es2020",
-      "strict": true,
-      "preserveConstEnums": true,
-      "noEmit": true,
-      "sourceMap": false,
-      "module":"nodenext",
-      "moduleResolution":"nodenext",
-      "esModuleInterop": true, 
-      "skipLibCheck": true,
-      "forceConsistentCasingInFileNames": true,  
+  "compilerOptions": {
+    "target": "es2020",
+    "strict": true,
+    "preserveConstEnums": true,
+    "noEmit": true,
+    "sourceMap": false,
+    "module":"nodenext",
+    "moduleResolution":"nodenext",
+    "esModuleInterop": true, 
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true, 
+    "types": ["node", "jest"], 
+    "paths": {
+      "shared": ["./layers/shared/src/index.ts"]
     },
-    "exclude": ["node_modules", "**/*.test.ts"]
-  }
+    "isolatedModules": true,
+  },
+  "exclude": ["node_modules"]
+}

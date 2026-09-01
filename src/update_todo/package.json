@@ -1,4 +1,8 @@
 {
   "name": "update_todo",
-  "version": "1.0.0"
+  "version": "1.0.0",
+  "dependencies": {
+    "@aws-sdk/client-dynamodb": "^3.1119.0",
+    "@aws-sdk/lib-dynamodb": "^3.1119.0"
+  }
 }
