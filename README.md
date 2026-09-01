@@ -29,26 +29,24 @@ A simple CRUD to-do app built on AWS, using only always-free tier services.
 - Due dates and priority levels
 - Frontend deployed to a public URL
 - CORS support for browser-based frontend
-## Project Structure
- 
-```
-src/
-├── create_todo/
-├── get_todos/
-├── list_todos/
-├── update_todo/
-└── delete_todo/
-template.yaml
-package.json
-tsconfig.json
-```
+son
  
 ## Deploy
  
 ```
 npm install
 sam build
+npm run test
 sam deploy --guided
+```
+
+## Run locally
+Must have Docker Desktop installed to simulate Lambda runtime environment.
+```
+npm install
+sam build
+npm run test
+sam local start-api
 ```
  
 ## Test
