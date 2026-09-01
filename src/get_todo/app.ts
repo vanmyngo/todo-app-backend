@@ -6,6 +6,11 @@ import { DEFAULT_USER_ID } from "shared";
 const client = new DynamoDB({ region: process.env.REGION });
 const docClient = DynamoDBDocument.from(client);
 
+/**
+ * Retrieves a todo item from the DynamoDB table.
+ * @param userId - The ID of the user who owns the todo.
+ * @param taskId - The ID of the task to retrieve.
+ */
 async function getTodo(userId: string, taskId: string) {
   const params = {
     TableName: process.env.TABLE,
@@ -19,6 +24,10 @@ async function getTodo(userId: string, taskId: string) {
   return result;
 };
 
+/**
+ * Lambda function handler for retrieving a todo item.
+ * @param event - The Lambda event object.
+ */
 export const lambda_handler = async (event: APIGatewayProxyEvent) => {
   const taskId = event.pathParameters?.taskId;
 

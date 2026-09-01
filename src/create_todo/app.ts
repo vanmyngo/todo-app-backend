@@ -1,11 +1,16 @@
 import { DynamoDB } from "@aws-sdk/client-dynamodb";
 import { DynamoDBDocument } from "@aws-sdk/lib-dynamodb";
+import { APIGatewayProxyEvent } from "aws-lambda";
 import { randomUUID } from "crypto";
 import { DEFAULT_USER_ID } from "shared";
 
 const client = new DynamoDB({ region: process.env.REGION });
 const docClient = DynamoDBDocument.from(client);
 
+/**
+ * Creates a new todo item in the DynamoDB table.
+ * @param task - The task description.
+ */
 async function createTodo(task: string) {
   const params = {
     TableName: process.env.TABLE,
@@ -21,7 +26,11 @@ async function createTodo(task: string) {
   return params.Item;
 }
 
-export const lambda_handler = async (event: any) => {
+/**
+ * Lambda function handler for creating a new todo item.
+ * @param event - The Lambda event object.
+ */
+export const lambda_handler = async (event: APIGatewayProxyEvent) => {
   const body = JSON.parse(event.body ?? "{}");
 
   if (!body.task || typeof body.task !== "string" || body.task.trim() === "") {
