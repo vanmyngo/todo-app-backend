@@ -19,7 +19,7 @@ describe("create_todo", () => {
 
         // Fake API Gateway event
         const taskName = "Buy bread";
-        const event = { body: JSON.stringify({ task: taskName }) };
+        const event = { body: JSON.stringify({ task: taskName }) } as any;
 
         // Call real handler
         const result = await lambda_handler(event);
@@ -44,7 +44,7 @@ describe("create_todo", () => {
         { description: "task is not a string", body: { task: 123 } },
     ])("Returns 400 - $description", async ({ body }: { body: Record<string, unknown> }) => {
         // Fake API Gateway event
-        const event = { body: JSON.stringify(body) };
+        const event = { body: JSON.stringify(body) } as any;
 
         // Call handler
         const result = await lambda_handler(event);
@@ -56,7 +56,7 @@ describe("create_todo", () => {
 
     it("Returns 400 - event.body is missing", async () => {
         // Fake API Gateway event    
-        const event = { body: null };
+        const event = { body: null } as any;
 
         // Call handler
         const result = await lambda_handler(event);
