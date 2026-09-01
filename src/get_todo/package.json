@@ -1,5 +1,5 @@
 {
-  "name": "get_todos",
+  "name": "get_todo",
   "version": "1.0.0",
   "dependencies": {
     "@aws-sdk/client-dynamodb": "^3.1119.0",

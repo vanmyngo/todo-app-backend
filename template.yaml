@@ -69,7 +69,7 @@ Resources:
   GetTodoFunction:
     Type: AWS::Serverless::Function
     Properties:
-      CodeUri: src/get_todos/
+      CodeUri: src/get_todo/
       Handler: app.lambda_handler
       Runtime: nodejs24.x
       Events:
