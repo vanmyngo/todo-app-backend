@@ -6,6 +6,11 @@ import type { APIGatewayProxyEvent } from "aws-lambda";
 const client = new DynamoDB({ region: process.env.REGION });
 const docClient = DynamoDBDocument.from(client);
 
+/**
+ * Deletes a todo item from the DynamoDB table.
+ * @param userId - The ID of the user who owns the todo.
+ * @param taskId - The ID of the task to delete.
+ */
 async function deleteTodo(userId: string, taskId: string) {
   const params = {
     TableName: process.env.TABLE,
@@ -18,6 +23,10 @@ async function deleteTodo(userId: string, taskId: string) {
   await docClient.delete(params);
 }
 
+/**
+ * Lambda function handler for deleting a todo item.
+ * @param event - The Lambda event object.
+ */
 export const lambda_handler = async (event: APIGatewayProxyEvent) => {
   const taskId = event.pathParameters?.taskId;
 

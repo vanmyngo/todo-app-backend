@@ -46,6 +46,10 @@ async function updateTodo(
   return await docClient.update(params);
 };
 
+/**
+ * Lambda function handler for updating a todo item.
+ * @param event - The Lambda event object.
+ */
 export const lambda_handler = async (event: APIGatewayProxyEvent) => {
   // Validate taskId
   const taskId = event.pathParameters?.taskId;
@@ -72,6 +76,7 @@ export const lambda_handler = async (event: APIGatewayProxyEvent) => {
 
   // Call the updateTodo function and handle errors
   try {
+    // Dynamically construct the update parameters based on provided fields
     const result = await updateTodo(DEFAULT_USER_ID, taskId, {
       ...(hasValidTask && { task }),
       ...(hasValidCompleted && { completed }),
