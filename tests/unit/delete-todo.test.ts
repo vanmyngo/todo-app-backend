@@ -1,18 +1,25 @@
-// Fake delete function to control
+// Mock function for DynamoDBDocument.delete
 const mockDelete = jest.fn();
-
-// Mock DynamoDB with fake db
 jest.mock("@aws-sdk/lib-dynamodb", () => ({
     DynamoDBDocument: {
         from: () => ({ delete: mockDelete })
     }
 }));
 
+// Mock function for getUserIdFromEvent
+const mockGetUserIdFromEvent = jest.fn();
+jest.mock("shared", () => ({
+    getUserIdFromEvent: () => mockGetUserIdFromEvent()
+}));
+
 // Imports
 import { lambda_handler } from "../../src/delete_todo/app";
-import { DEFAULT_USER_ID } from "shared";
 
 describe("delete_todo", () => {
+    beforeEach(() => { 
+        mockGetUserIdFromEvent.mockReturnValue(process.env.TEST_USER_ID); 
+    });
+    
     it("Returns 204 - todo deleted successfully", async () => {
         // Mock delete success
         mockDelete.mockResolvedValueOnce({});
@@ -29,7 +36,7 @@ describe("delete_todo", () => {
         expect(mockDelete).toHaveBeenCalledWith({
             TableName: process.env.TABLE,
             Key: {
-                userId: DEFAULT_USER_ID,
+                userId: process.env.TEST_USER_ID,
                 taskId
             }
         });

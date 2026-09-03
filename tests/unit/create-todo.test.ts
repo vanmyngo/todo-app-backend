@@ -1,18 +1,25 @@
-// Fake put function to control
+// Mock function for DynamoDBDocument.put
 const mockPut = jest.fn();
-
-// Mock DynamoDB with fake db
 jest.mock("@aws-sdk/lib-dynamodb", () => ({
     DynamoDBDocument: {
         from: () => ({ put: mockPut })
     }
 }));
 
+// Mock function for getUserIdFromEvent
+const mockGetUserIdFromEvent = jest.fn();
+jest.mock("shared", () => ({
+    getUserIdFromEvent: () => mockGetUserIdFromEvent()
+}));
+
 // Imports
 import { lambda_handler } from "../../src/create_todo/app";
-import { DEFAULT_USER_ID } from "shared";
 
 describe("create_todo", () => {
+    beforeEach(() => { 
+        mockGetUserIdFromEvent.mockReturnValue(process.env.TEST_USER_ID); 
+    });
+
     it("Returns 201 - new item successfully created", async () => {
         // Put todo succeeds
         mockPut.mockResolvedValueOnce({});
@@ -29,7 +36,7 @@ describe("create_todo", () => {
         expect(result.statusCode).toBe(201);
         expect(body.task).toBe(taskName);
         expect(body.completed).toBe(false);
-        expect(body.userId).toBe(DEFAULT_USER_ID);
+        expect(body.userId).toBe(process.env.TEST_USER_ID);
 
         // Assert auto-generated values
         expect(typeof body.taskId).toBe("string");
@@ -64,5 +71,20 @@ describe("create_todo", () => {
         // Assert fail before put is call
         expect(result.statusCode).toBe(400);
         expect(mockPut).not.toHaveBeenCalled();
+    });
+
+    it("Returns 500 - error thrown", async () => {
+        // Mock put failure
+        mockPut.mockRejectedValueOnce(new Error("DynamoDB unavailable"));
+
+        // Fake API Gateway event
+        const event = { body: JSON.stringify({ task: "Buy bread" }) } as any;
+
+        // Call handler
+        const result = await lambda_handler(event);
+
+        // Assert response
+        expect(result.statusCode).toBe(500);
+        expect(JSON.parse(result.body as string).message).toBe("Failed to create todo.");
     });
 })

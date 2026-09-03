@@ -1,22 +1,29 @@
-// Fake query function to control
+// Mock function for DynamoDBDocument.query
 const mockQuery = jest.fn();
-
-// Mock DynamoDB with fake db
 jest.mock("@aws-sdk/lib-dynamodb", () => ({
     DynamoDBDocument: {
         from: () => ({ query: mockQuery })
     }
 }));
 
+// Mock function for getUserIdFromEvent
+const mockGetUserIdFromEvent = jest.fn();
+jest.mock("shared", () => ({
+    getUserIdFromEvent: () => mockGetUserIdFromEvent()
+}));
+
 // Imports
-import { DEFAULT_USER_ID } from "shared";
 import { lambda_handler } from "../../src/list_todos/app";
 
 describe("list_todos", () => {
+    beforeEach(() => { 
+        mockGetUserIdFromEvent.mockReturnValue(process.env.TEST_USER_ID); 
+    });
+    
     it.each([ 
         {
             description: "Returns 200 - successful query with todos",
-            mockTodos: [{ userId: DEFAULT_USER_ID, "taskId": "1", task: "Buy bread", completed: false }]
+            mockTodos: [{ userId: process.env.TEST_USER_ID, "taskId": "1", task: "Buy bread", completed: false }]
         },
         {
             description: "Returns 200 - no todos",
@@ -27,7 +34,8 @@ describe("list_todos", () => {
         mockQuery.mockResolvedValueOnce({ Items: mockTodos });
 
         // Call real handler
-        const result = await lambda_handler();
+        const event = {};
+        const result = await lambda_handler(event as any);
 
         // Assert response
         expect(result.statusCode).toBe(200);
@@ -39,7 +47,8 @@ describe("list_todos", () => {
         mockQuery.mockRejectedValueOnce(new Error("DynamoDB unavailable"));
 
         // Call handler
-        const result = await lambda_handler();
+        const event = {};
+        const result = await lambda_handler(event as any);
 
         // Assert response
         expect(result.statusCode).toBe(500);
@@ -51,13 +60,14 @@ describe("list_todos", () => {
         mockQuery.mockResolvedValueOnce({ Items: [] });
 
         // Call handler
-        await lambda_handler();
+        const event = {};
+        await lambda_handler(event as any);
 
         // Assert request parameters
         expect(mockQuery).toHaveBeenCalledWith({
             TableName: process.env.TABLE,
             KeyConditionExpression: "userId = :userId",
-            ExpressionAttributeValues: { ":userId": DEFAULT_USER_ID}
+            ExpressionAttributeValues: { ":userId": process.env.TEST_USER_ID }
         });
     });
 })
