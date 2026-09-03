@@ -1,6 +1,6 @@
 import { DynamoDB } from "@aws-sdk/client-dynamodb";
 import { DynamoDBDocument } from "@aws-sdk/lib-dynamodb";
-import { DEFAULT_USER_ID } from "shared";
+import { getUserIdFromEvent } from "shared";
 import type { APIGatewayProxyEvent } from "aws-lambda";
 
 const client = new DynamoDB({ region: process.env.REGION });
@@ -39,7 +39,8 @@ export const lambda_handler = async (event: APIGatewayProxyEvent) => {
   }
 
   try {
-    await deleteTodo(DEFAULT_USER_ID, taskId);
+    const userId = getUserIdFromEvent(event);
+    await deleteTodo(userId, taskId);
     return {
       statusCode: 204,
     };

@@ -22,6 +22,12 @@ Metadata:
 
 # More info about Globals: https://github.com/awslabs/serverless-application-model/blob/master/docs/globals.rst
 Globals:
+  Api: 
+    Auth:
+      AddDefaultAuthorizerToCorsPreflight: false
+      Authorizers:
+        CognitoAuthorizer:
+          UserPoolArn: !GetAtt CognitoUserPool.Arn
   Function:
     Timeout: 3
     Environment:
@@ -45,6 +51,30 @@ Resources:
           KeyType: HASH
         - AttributeName: taskId
           KeyType: RANGE
+
+  CognitoUserPool:
+    Type: AWS::Cognito::UserPool
+    Properties:
+      UserPoolName: !Sub "${AWS::StackName}-user-pool"
+      AutoVerifiedAttributes:
+        - email
+      Policies:
+        PasswordPolicy:
+          MinimumLength: 8
+          RequireUppercase: true
+          RequireLowercase: true
+          RequireNumbers: true
+          RequireSymbols: true
+
+  UserPoolClient:
+    Type: AWS::Cognito::UserPoolClient
+    Properties:
+      ClientName: !Sub "${AWS::StackName}-user-pool-client"
+      UserPoolId: !Ref CognitoUserPool
+      GenerateSecret: false
+      ExplicitAuthFlows:
+        - ALLOW_ADMIN_USER_PASSWORD_AUTH
+        - ALLOW_USER_PASSWORD_AUTH
       
   CreateTodoFunction:
     Type: AWS::Serverless::Function
@@ -58,6 +88,8 @@ Resources:
           Properties:
             Path: /todos
             Method: post
+            Auth: 
+              Authorizer: CognitoAuthorizer
       Policies:
         - DynamoDBCrudPolicy:
             TableName: !Ref TodosTable
@@ -78,6 +110,8 @@ Resources:
           Properties:
             Path: /todos/{taskId}
             Method: get
+            Auth: 
+              Authorizer: CognitoAuthorizer
       Policies:
         - DynamoDBCrudPolicy:
             TableName: !Ref TodosTable
@@ -98,6 +132,8 @@ Resources:
           Properties:
             Path: /todos
             Method: get
+            Auth: 
+              Authorizer: CognitoAuthorizer
       Policies:
         - DynamoDBCrudPolicy:
             TableName: !Ref TodosTable
@@ -118,6 +154,8 @@ Resources:
           Properties:
             Path: /todos/{taskId}
             Method: put
+            Auth: 
+              Authorizer: CognitoAuthorizer
       Policies:
         - DynamoDBCrudPolicy:
             TableName: !Ref TodosTable
@@ -138,6 +176,8 @@ Resources:
           Properties:
             Path: /todos/{taskId}
             Method: delete
+            Auth: 
+              Authorizer: CognitoAuthorizer
       Policies:
         - DynamoDBCrudPolicy:
             TableName: !Ref TodosTable
