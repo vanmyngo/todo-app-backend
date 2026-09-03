@@ -1,22 +1,30 @@
-// Fake get function to control
+// Mock function for DynamoDBDocument.get
 const mockGet = jest.fn();
-
-// Mock DynamoDB with fake db
 jest.mock("@aws-sdk/lib-dynamodb", () => ({
     DynamoDBDocument: {
         from: () => ({ get: mockGet })
     }
 }));
 
+// Mock function for getUserIdFromEvent
+const mockGetUserIdFromEvent = jest.fn();
+jest.mock("shared", () => ({
+    getUserIdFromEvent: () => mockGetUserIdFromEvent()
+}));
+
 // Imports
 import { lambda_handler } from "../../src/get_todo/app";
-import { DEFAULT_USER_ID } from "shared";
 
 describe("get_todo", () => {
+    beforeEach(() => { 
+        mockGetUserIdFromEvent.mockReturnValue(process.env.TEST_USER_ID); 
+    });
+
     it("Returns 200 - todo exists", async () => {
         const taskId = "task1";
+        const userId = process.env.TEST_USER_ID;
         const mockTodo = {
-            userId: DEFAULT_USER_ID,
+            userId,
             taskId,
             task: "Buy cookies",
             completed: false,
@@ -37,7 +45,7 @@ describe("get_todo", () => {
         expect(mockGet).toHaveBeenCalledWith({
             TableName: process.env.TABLE,
             Key: {
-                userId: DEFAULT_USER_ID,
+                userId,
                 taskId,
             },
         });

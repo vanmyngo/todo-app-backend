@@ -1,7 +1,7 @@
 import { DynamoDB } from "@aws-sdk/client-dynamodb";
 import { DynamoDBDocument, UpdateCommandInput } from "@aws-sdk/lib-dynamodb";
 import { APIGatewayProxyEvent } from "aws-lambda";
-import { DEFAULT_USER_ID } from "shared";
+import { getUserIdFromEvent } from "shared";
 
 const client = new DynamoDB({ region: process.env.REGION });
 const docClient = DynamoDBDocument.from(client);
@@ -77,7 +77,8 @@ export const lambda_handler = async (event: APIGatewayProxyEvent) => {
   // Call the updateTodo function and handle errors
   try {
     // Dynamically construct the update parameters based on provided fields
-    const result = await updateTodo(DEFAULT_USER_ID, taskId, {
+    const userId = getUserIdFromEvent(event);
+    const result = await updateTodo(userId, taskId, {
       ...(hasValidTask && { task }),
       ...(hasValidCompleted && { completed }),
     });

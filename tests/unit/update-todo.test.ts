@@ -1,19 +1,27 @@
-// Mock the DynamoDBDocument update method
+// Mock function for DynamoDB update
 const mockUpdate = jest.fn();
-
-// Mock the DynamoDBDocument.from method to return an object with the mocked update method
 jest.mock("@aws-sdk/lib-dynamodb", () => ({
-  DynamoDBDocument: {
-    from: () => ({ update: mockUpdate })
-  }
+    DynamoDBDocument: {
+        from: () => ({ update: mockUpdate })
+    }
+}));
+
+// Mock function for getUserIdFromEvent
+const mockGetUserIdFromEvent = jest.fn();
+jest.mock("shared", () => ({
+  getUserIdFromEvent: () => mockGetUserIdFromEvent()
 }));
 
 // Imports
 import { lambda_handler } from "../../src/update_todo/app";
-import { DEFAULT_USER_ID } from "shared";
 
 describe("update_todo", () => {
     const taskId = "task-1";
+    const userId = process.env.TEST_USER_ID;
+
+    beforeEach(() => { 
+        mockGetUserIdFromEvent.mockReturnValue(process.env.TEST_USER_ID); 
+    });
 
     describe("taskId validation", () => {
         it.each([
@@ -46,7 +54,7 @@ describe("update_todo", () => {
             { description: "updates task to whitespace only and completed is valid", body: { task: "   ", completed: false }, expected: { ":completed": false } },
         ])("Returns 200 - $description", async ({ body, expected }: { body: Record<string, unknown>, expected: Record<string, unknown> }) => {
             // Mock the update method to return a successful response
-            mockUpdate.mockResolvedValueOnce({ Attributes: { userId: DEFAULT_USER_ID, taskId, ...expected } });
+            mockUpdate.mockResolvedValueOnce({ Attributes: { userId, taskId, ...expected } });
 
             // Create a mock event with pathParameters and body
             const event = { pathParameters: { taskId: taskId }, body: JSON.stringify(body) } as any;
@@ -58,7 +66,7 @@ describe("update_todo", () => {
             expect(result.statusCode).toBe(200);
             expect(mockUpdate).toHaveBeenCalledWith(expect.objectContaining({
                 TableName: process.env.TABLE,
-                Key: { userId: DEFAULT_USER_ID, taskId: taskId },
+                Key: { userId, taskId },
                 UpdateExpression: expect.stringContaining("SET"),
                 ExpressionAttributeValues: expected,
                 ReturnValues: "ALL_NEW"

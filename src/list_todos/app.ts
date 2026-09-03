@@ -1,6 +1,7 @@
 import { DynamoDB } from "@aws-sdk/client-dynamodb";
 import { DynamoDBDocument } from "@aws-sdk/lib-dynamodb";
-import { DEFAULT_USER_ID } from "shared";
+import { APIGatewayProxyEvent } from "aws-lambda";
+import { getUserIdFromEvent } from "shared";
 
 const client = new DynamoDB({ region: process.env.REGION });
 const docClient = DynamoDBDocument.from(client);
@@ -22,9 +23,10 @@ async function queryItems(userId: string) {
 /**
  * Lambda function handler for listing all todo items for a specific user.
  */
-export const lambda_handler = async () => {
+export const lambda_handler = async (event: APIGatewayProxyEvent) => {
   try {
-    const items = await queryItems(DEFAULT_USER_ID)
+    const userId = getUserIdFromEvent(event);
+    const items = await queryItems(userId);
     return { 
       statusCode: 200,
       body: JSON.stringify(items) 
