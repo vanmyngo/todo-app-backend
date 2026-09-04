@@ -200,3 +200,9 @@ Outputs:
   TodosTableName:
     Description: "Name of the DynamoDB table"
     Value: !Ref TodosTable
+  UserPoolId:
+    Description: "User pool ID"
+    Value: !Ref CognitoUserPool
+  ClientId: 
+    Description: "User pool client ID"
+    Value: !Ref UserPoolClient
