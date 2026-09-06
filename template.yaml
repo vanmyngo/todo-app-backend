@@ -73,8 +73,8 @@ Resources:
       UserPoolId: !Ref CognitoUserPool
       GenerateSecret: false
       ExplicitAuthFlows:
-        - ALLOW_ADMIN_USER_PASSWORD_AUTH
-        - ALLOW_USER_PASSWORD_AUTH
+        - ALLOW_USER_SRP_AUTH
+        - ALLOW_REFRESH_TOKEN_AUTH
       
   CreateTodoFunction:
     Type: AWS::Serverless::Function
@@ -200,3 +200,9 @@ Outputs:
   TodosTableName:
     Description: "Name of the DynamoDB table"
     Value: !Ref TodosTable
+  UserPoolId:
+    Description: "User pool ID"
+    Value: !Ref CognitoUserPool
+  ClientId: 
+    Description: "User pool client ID"
+    Value: !Ref UserPoolClient
