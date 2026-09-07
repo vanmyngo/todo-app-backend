@@ -23,6 +23,10 @@ Metadata:
 # More info about Globals: https://github.com/awslabs/serverless-application-model/blob/master/docs/globals.rst
 Globals:
   Api: 
+    Cors: 
+      AllowMethods: "'GET, POST, PUT, DELETE, OPTIONS'"
+      AllowHeaders: "'Content-Type, Authorization'"
+      AllowOrigin: "'http://localhost:5173'" 
     Auth:
       AddDefaultAuthorizerToCorsPreflight: false
       Authorizers:
