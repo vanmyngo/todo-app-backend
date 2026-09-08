@@ -1,7 +1,7 @@
 import { DynamoDB } from "@aws-sdk/client-dynamodb";
 import { DynamoDBDocument, UpdateCommandInput } from "@aws-sdk/lib-dynamodb";
 import { APIGatewayProxyEvent } from "aws-lambda";
-import { getUserIdFromEvent } from "shared";
+import { corsHeaders, getUserIdFromEvent } from "shared";
 
 const client = new DynamoDB({ region: process.env.REGION });
 const docClient = DynamoDBDocument.from(client);
@@ -57,6 +57,7 @@ export const lambda_handler = async (event: APIGatewayProxyEvent) => {
   if (!hasValidTaskId) {
     return {
       statusCode: 400,
+      headers: corsHeaders,
       body: JSON.stringify({ message: "Task ID is required." })
     };
   }
@@ -70,6 +71,7 @@ export const lambda_handler = async (event: APIGatewayProxyEvent) => {
   if (!hasValidTask && !hasValidCompleted) {
     return {
       statusCode: 400,
+      headers: corsHeaders,
       body: JSON.stringify({ message: "Task or completion status is required." })
     };
   }
@@ -84,12 +86,14 @@ export const lambda_handler = async (event: APIGatewayProxyEvent) => {
     });
     return {
       statusCode: 200,
+      headers: corsHeaders,
       body: JSON.stringify(result.Attributes)
     };
   } catch (error) {
     console.error("[update_todo/app.ts] " + error);
     return {
       statusCode: 500,
+      headers: corsHeaders,
       body: JSON.stringify({ message: "Failed to update todo." })
     };
   }

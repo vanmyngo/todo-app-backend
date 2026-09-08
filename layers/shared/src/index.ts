@@ -13,3 +13,10 @@ export function getUserIdFromEvent(event: APIGatewayProxyEvent): string {
     }
     return userId;
 };
+
+/**
+ * Define CORS headers
+ */
+export const corsHeaders = {
+    "Access-Control-Allow-Origin": "http://localhost:5173/"
+}

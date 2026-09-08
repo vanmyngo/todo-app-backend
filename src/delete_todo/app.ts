@@ -1,6 +1,6 @@
 import { DynamoDB } from "@aws-sdk/client-dynamodb";
 import { DynamoDBDocument } from "@aws-sdk/lib-dynamodb";
-import { getUserIdFromEvent } from "shared";
+import { corsHeaders, getUserIdFromEvent } from "shared";
 import type { APIGatewayProxyEvent } from "aws-lambda";
 
 const client = new DynamoDB({ region: process.env.REGION });
@@ -34,6 +34,7 @@ export const lambda_handler = async (event: APIGatewayProxyEvent) => {
   if (!taskId || typeof taskId !== "string" || taskId.trim() === "") {
     return {
       statusCode: 400,
+      headers: corsHeaders,
       body: JSON.stringify({ message: "Task is required to delete." })
     };
   }
@@ -43,11 +44,13 @@ export const lambda_handler = async (event: APIGatewayProxyEvent) => {
     await deleteTodo(userId, taskId);
     return {
       statusCode: 204,
+      headers: corsHeaders
     };
   } catch (error) {
     console.error("[delete_todo/app.ts] " + error);
     return {
       statusCode: 500,
+      headers: corsHeaders,
       body: JSON.stringify({ message: "Failed to delete todo." })
     };
   }
