@@ -34,7 +34,7 @@ A simple CRUD to-do app built on AWS, using only always-free tier services.
 ```
 src/
 ├── create_todo/
-├── get_todos/
+├── get_todo/
 ├── list_todos/
 ├── update_todo/
 └── delete_todo/
@@ -44,8 +44,13 @@ tsconfig.json
 ```
  
 ## Deploy
+Run build in shared layer if there are changes.
  
 ```
+cd <project-root>/layers/shared
+npm install
+npm run build
+cd <project-root>
 npm install
 sam build
 sam deploy --guided
