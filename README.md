@@ -29,11 +29,15 @@ A simple CRUD to-do app built on AWS, using only always-free tier services.
 - Due dates and priority levels
 - Frontend deployed to a public URL
 - CORS support for browser-based frontend
-son
  
 ## Deploy
+Run build in shared layer if there are changes.
  
 ```
+cd <project-root>/layers/shared
+npm install
+npm run build
+cd <project-root>
 npm install
 sam build
 npm run test

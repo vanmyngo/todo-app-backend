@@ -2,7 +2,7 @@ import { DynamoDB } from "@aws-sdk/client-dynamodb";
 import { DynamoDBDocument } from "@aws-sdk/lib-dynamodb";
 import { APIGatewayProxyEvent } from "aws-lambda";
 import { randomUUID } from "crypto";
-import { getUserIdFromEvent } from "shared";
+import { corsHeaders, getUserIdFromEvent } from "shared";
 
 const client = new DynamoDB({ region: process.env.REGION });
 const docClient = DynamoDBDocument.from(client);
@@ -36,6 +36,7 @@ export const lambda_handler = async (event: APIGatewayProxyEvent) => {
   if (!body.task || typeof body.task !== "string" || body.task.trim() === "") {
     return {
       statusCode: 400,
+      headers: corsHeaders,
       body: JSON.stringify({ message: "Task is required." })
     };
   }
@@ -45,12 +46,14 @@ export const lambda_handler = async (event: APIGatewayProxyEvent) => {
     const newTodo = await createTodo(userId, body.task);
     return {
       statusCode: 201,
+      headers: corsHeaders,
       body: JSON.stringify(newTodo)
     };
   } catch (error) {
     console.error("[create_todo/app.ts] " + error);
     return {
       statusCode: 500,
+      headers: corsHeaders,
       body: JSON.stringify({ message: "Failed to create todo." })
     };
   }

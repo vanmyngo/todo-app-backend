@@ -1,7 +1,7 @@
 import { DynamoDB } from "@aws-sdk/client-dynamodb";
 import { DynamoDBDocument } from "@aws-sdk/lib-dynamodb";
 import { APIGatewayProxyEvent } from "aws-lambda";
-import { getUserIdFromEvent } from "shared";
+import { corsHeaders, getUserIdFromEvent } from "shared";
 
 const client = new DynamoDB({ region: process.env.REGION });
 const docClient = DynamoDBDocument.from(client);
@@ -34,6 +34,7 @@ export const lambda_handler = async (event: APIGatewayProxyEvent) => {
   if (!taskId || typeof taskId !== "string" || taskId.trim() === "") {
     return {
       statusCode: 400,
+      headers: corsHeaders,
       body: JSON.stringify({ message: "Task is required." }),
     };
   }
@@ -45,18 +46,21 @@ export const lambda_handler = async (event: APIGatewayProxyEvent) => {
     if (!result.Item) {
       return {
         statusCode: 404,
+        headers: corsHeaders,
         body: JSON.stringify({ message: "Todo not found." }),
       };
     }
 
     return {
       statusCode: 200,
+      headers: corsHeaders,
       body: JSON.stringify(result.Item),
     };
   } catch (error) {
     console.error("[get_todo/app.ts] " + error);
     return {
       statusCode: 500,
+      headers: corsHeaders,
       body: JSON.stringify({ message: "Failed to get todo." }),
     };
   }

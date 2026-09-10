@@ -1,7 +1,7 @@
 import { DynamoDB } from "@aws-sdk/client-dynamodb";
 import { DynamoDBDocument } from "@aws-sdk/lib-dynamodb";
 import { APIGatewayProxyEvent } from "aws-lambda";
-import { getUserIdFromEvent } from "shared";
+import { corsHeaders, getUserIdFromEvent } from "shared";
 
 const client = new DynamoDB({ region: process.env.REGION });
 const docClient = DynamoDBDocument.from(client);
@@ -29,12 +29,14 @@ export const lambda_handler = async (event: APIGatewayProxyEvent) => {
     const items = await queryItems(userId);
     return { 
       statusCode: 200,
+      headers: corsHeaders,
       body: JSON.stringify(items) 
     };
   } catch (error) {
     console.error("[list_todos/app.ts] " + error);
     return {
       statusCode: 500,
+      headers: corsHeaders,
       body: JSON.stringify({ message: "Failed to fetch todos."})
     };
   }
