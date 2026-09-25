@@ -18,7 +18,7 @@ export function getUserIdFromEvent(event: APIGatewayProxyEvent): string {
  * Define CORS headers
  */
 export const corsHeaders = {
-    "Access-Control-Allow-Origin": "http://localhost:5173",
+    "Access-Control-Allow-Origin": "https://96pl3etjr3.execute-api.us-east-1.amazonaws.com",
     "Access-Control-Allow-Headers": "Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token",
     "Content-Type": "application/json",
     "Access-Control-Allow-Methods": "GET,POST,PUT,DELETE,OPTIONS",
