@@ -13,7 +13,8 @@
     "unit": "jest",
     "lint": "eslint '*.ts' --quiet --fix",
     "compile": "tsc",
-    "test": "npm run compile && npm run unit"
+    "test": "npm run compile && npm run unit",
+    "build": "npm --prefix layers/shared ci && npm --prefix layers/shared run build && sam build"
   },
   "dependencies": {
     "esbuild": "^0.14.54"
