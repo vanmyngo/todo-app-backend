@@ -1,6 +1,7 @@
 # Todo App
  
-A simple CRUD to-do app built on AWS, using only always-free tier services.
+A simple CRUD to-do app built on AWS, using only always-free tier services.<br/>
+Prod URL: https://d3983hh5nndqkk.cloudfront.net
  
 ## Tech Stack
  
@@ -10,10 +11,10 @@ A simple CRUD to-do app built on AWS, using only always-free tier services.
 - Amazon DynamoDB (single table, on-demand billing)
 - AWS SAM (infrastructure as code)
 ### Frontend
-- React (planned)
+- React
 - Hosted on S3 + CloudFront
 ### Auth
-- Amazon Cognito (planned)
+- Amazon Cognito
 ## MVP Features
  
 - Create a to-do
@@ -22,13 +23,11 @@ A simple CRUD to-do app built on AWS, using only always-free tier services.
 - Update a to-do (edit text or mark complete)
 - Delete a to-do
 - Public API reachable over HTTPS
+- User accounts and login (Cognito)
 ## Future Features
  
-- User accounts and login (Cognito)
 - Per-user private to-do lists
 - Due dates and priority levels
-- Frontend deployed to a public URL
-- CORS support for browser-based frontend
  
 ## Deploy
 Run build in shared layer if there are changes.
@@ -43,6 +42,8 @@ sam build
 npm run test
 sam deploy --guided
 ```
+
+Or run `npm run build` in project root. Build script install and build shared layer before running sam build.
 
 ## Run locally
 Must have Docker Desktop installed to simulate Lambda runtime environment.
