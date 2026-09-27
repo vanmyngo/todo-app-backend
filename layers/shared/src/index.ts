@@ -18,7 +18,7 @@ export function getUserIdFromEvent(event: APIGatewayProxyEvent): string {
  * Define CORS headers
  */
 export const corsHeaders = {
-    "Access-Control-Allow-Origin": "https://d3983hh5nndqkk.cloudfront.net",
+    "Access-Control-Allow-Origin": process.env.ALLOWED_ORIGIN ?? "https://d3983hh5nndqkk.cloudfront.net",
     "Access-Control-Allow-Headers": "Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token",
     "Content-Type": "application/json",
     "Access-Control-Allow-Methods": "GET,POST,PUT,DELETE,OPTIONS",

@@ -2,10 +2,6 @@
 # https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/serverless-sam-cli-config.html
 version = 0.1
 
-[default.global.parameters]
-stack_name = "todo-app"
-region = "us-east-1"
-
 [default.build.parameters]
 cached = true
 parallel = true
@@ -14,13 +10,12 @@ parallel = true
 lint = true
 
 [default.deploy.parameters]
+stack_name = "todo-app"
+region = "us-east-1"
 capabilities = "CAPABILITY_IAM"
 confirm_changeset = true
 resolve_s3 = true
 s3_prefix = "todo-app"
-region = "us-east-1"
-parameter_overrides = "TableName=\"TodosTable\""
-image_repositories = []
 
 [default.package.parameters]
 resolve_s3 = true
@@ -33,3 +28,11 @@ warm_containers = "EAGER"
 
 [default.local_start_lambda.parameters]
 warm_containers = "EAGER"
+
+[dev.deploy.parameters]
+stack_name = "todo-app-dev"
+region = "us-east-1"
+capabilities = "CAPABILITY_IAM"
+resolve_s3 = true
+confirm_changeset = true
+parameter_overrides = "TableName=\"TodosTableDev\" AllowedOrigin=\"http://localhost:5173\""
