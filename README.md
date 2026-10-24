@@ -16,19 +16,6 @@ Frontend Repo: https://github.com/vanmyngo/todo-app-frontend
 - Hosted on S3 + CloudFront
 ### Auth
 - Amazon Cognito
-## MVP Features
- 
-- Create a to-do
-- List all to-dos
-- Get a single to-do by id
-- Update a to-do (edit text or mark complete)
-- Delete a to-do
-- Public API reachable over HTTPS
-- User accounts and login (Cognito)
-## Future Features
- 
-- Per-user private to-do lists
-- Due dates and priority levels
  
 ## Deploy
 Run build in shared layer if there are changes.
@@ -44,7 +31,8 @@ npm run test
 sam deploy --guided
 ```
 
-Or run `npm run build` in project root. Build script install and build shared layer before running sam build.
+Or run `npm run build` in project root. Build script install and build shared layer before running sam build.<br/>
+Run `sam deploy --config-env dev` to deploy to dev only.
 
 ## Run locally
 Must have Docker Desktop installed to simulate Lambda runtime environment.
