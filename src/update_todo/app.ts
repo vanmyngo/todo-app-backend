@@ -26,10 +26,13 @@ async function updateTodo(
     expressionAttributeValues[":task"] = updates.task;
   }
 
-  // Add the completed status to the update expression if it is provided
+  // Add the completed status and completedDate to the update expression if completed is provided
   if (updates.completed !== undefined) {
+    const completedDate = updates.completed ? new Date().toISOString() : null;
     updateExpressions.push("completed = :completed");
+    updateExpressions.push("completedDate = :completedDate");
     expressionAttributeValues[":completed"] = updates.completed;
+    expressionAttributeValues[":completedDate"] = completedDate;
   }
 
   // Call update on the DynamoDB document client with the constructed parameters
