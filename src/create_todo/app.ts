@@ -19,7 +19,8 @@ async function createTodo(userId: string, task: string) {
       taskId: randomUUID(),
       task,
       completed: false,
-      createdAt: new Date().toISOString()
+      createdAt: new Date().toISOString(),
+      completedDate: null
     }
   };
   await docClient.put(params);
